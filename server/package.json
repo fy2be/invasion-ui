@@ -1,0 +1,16 @@
+{
+    "name": "invasion-ui-server",
+    "version": "0.0.1",
+    "scripts": {
+        "build": "./node_modules/.bin/babel ./src -d ./build",
+        "start": "yarn build && nodemon server.js localhost 3333"
+    },
+    "dependencies": {
+        "babel-core": "^6.26.3",
+        "babel-cli": "^6.26.0",
+        "babel-eslint": "^8.2.3",
+        "babel-preset-es2015": "^6.24.1",
+        "babelify": "^8.0.0",
+        "telnet-client": "^0.15.5"
+    }
+}

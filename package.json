@@ -1,0 +1,12 @@
+{
+    "name": "invasion-ui",
+    "version": "0.0.1",
+    "scripts": {
+        "client": "cd client && yarn start",
+        "server": "cd server && yarn start",
+        "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    },
+    "dependencies": {
+        "concurrently": "^3.5.1"
+    }
+}

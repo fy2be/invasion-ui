@@ -1,0 +1,93 @@
+body {
+    /* background-color: pink; */
+    color: green;
+}
+
+.players-box {
+    display: flex;
+    border: 1px solid black;
+}
+
+.player {
+    border: 1px solid orange;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-size: 24px;
+    font-weight: bold;
+    /* border: 1px solid green; */
+    flex: 1;
+    border-bottom: 1px solid black;
+}
+
+.player-planets {
+    /* border: 1px solid blue; */
+}
+
+.player-planets-item {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.player-planets-item:hover {
+    background-color: #ffe;
+    cursor: pointer;
+}
+
+.player-planets-item .name {
+    font-size: 20px;
+}
+
+.player-planets-item .eq {
+    font-size: 20px;
+    font-weight: bold;
+    color: pink;
+}
+
+.ships-tanks {
+    display: flex;
+}
+
+.ships-tanks .between {
+    font-weight: bold;
+    color: black;
+}
+
+.ships-tanks-turn {
+    font-size: 14px;
+}
+
+.ships-tanks-turn .turn {
+    text-align: center;
+}
+
+.ships-tanks-turn .ships-tanks {
+    border-bottom: 2px solid black;
+}
+
+.ships-tanks > * {
+    padding: 0 3px;
+}
+
+.ships-tanks i {
+    font-size: 24px;
+    padding: 0 10px;
+    /* border: 1px solid red; */
+}
+
+.ships-tanks i.active {
+    color: pink;
+}
+
+.ships-tanks i:hover {
+    color: pink;
+}
+
+.player-planets-item > * {
+    padding: 10px;
+    /* border: 1px solid lightsalmon;     */
+}

@@ -97,6 +97,10 @@ function prepareEvents() {
         telnet.send(`JOIN_CHANNEL ${channel}`);
     });
 
+    socketio.on('leave_channel', function () {
+        telnet.send('LEAVE_CHANNEL');
+    });
+
     socketio.on('disconnect', function () {
         console.log('user disconnected');
         telnet.end();

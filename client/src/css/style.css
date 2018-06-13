@@ -1,11 +1,13 @@
-body {
-    /* background-color: pink; */
-    color: green;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .players-box {
     display: flex;
-    border: 1px solid black;
+    padding: 20px;
+    /* border: 1px solid black; */
 }
 
 .player {
@@ -25,6 +27,7 @@ body {
 
 .player-planets {
     /* border: 1px solid blue; */
+    display: flex;
 }
 
 .player-planets-item {
@@ -79,10 +82,6 @@ body {
     /* border: 1px solid red; */
 }
 
-.ships-tanks i.active {
-    color: pink;
-}
-
 .ships-tanks i:hover {
     color: pink;
 }
@@ -90,4 +89,104 @@ body {
 .player-planets-item > * {
     padding: 10px;
     /* border: 1px solid lightsalmon;     */
+}
+
+.mid {
+    min-width: 100vw;
+    display: flex;
+    padding: 20px;
+}
+
+.left {
+    border: 1px solid red;
+    flex: 0.5;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.planet-thumb {
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    margin: 5px;
+    min-width: 100px;
+}
+
+.planet-thumb:hover {
+    border: 1px dashed black;
+    cursor: pointer;
+}
+
+.planet-thumb .name {
+}
+
+.planet-thumb .eq {
+    display: flex;
+    justify-content: center;
+}
+
+.planet-thumb .eq .turn {}
+.planet-thumb .eq .between {}
+.planet-thumb .eq .efficiency {
+    color: green;
+    font-size: 24px;
+}
+
+.planet-thumb .eq > * { padding: 0 3px; }
+
+.planet-thumb .ships-tanks {
+    display: flex;
+    justify-content: center;
+}
+
+.planet-thumb .production {
+    display: flex;
+    justify-content: space-around;
+}
+
+.right {
+    border: 1px solid blue;
+    flex: 0.5;
+}
+
+.division {
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 15px;
+    margin: 5px;
+}
+
+.division > * {
+    /* border: 1px solid blue; */
+}
+
+.division-mid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+}
+
+.division-mid .top {
+    font-size: 32px;
+    text-align: center;
+}
+
+.division-mid .bottom {
+    font-size: 32px;
+    text-align: center;
+}
+
+.division-mid .bottom .number-of-ships {
+    font-size: 40px;
+}
+
+.division-mid .bottom > * {
+    padding: 0 10px;
+}
+
+i.active {
+    color: green;
 }

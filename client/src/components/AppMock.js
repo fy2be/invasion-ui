@@ -1,7 +1,7 @@
 import React from 'react';
 import Game from './Game/Game';
 import { distanceMatrix, planets, divisions } from './mock/test_value';
-import { splitPlanets, distance } from '../helpers';
+import { splitPlanets, distance, splitDivisions } from '../helpers';
 
 class App extends React.Component {
 
@@ -11,9 +11,12 @@ class App extends React.Component {
         this.state = {
         };
 
-        this.players = ['test1', 'test2'];
+        this.players = [
+            { name: 'test', planets: [] },
+            { name: 'fsfas', planets: [] }
+        ];
         this.planets = splitPlanets(planets);
-        this.divisions = divisions;
+        this.divisions = splitDivisions(divisions);
     }
 
     render() {

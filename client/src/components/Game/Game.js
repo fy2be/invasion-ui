@@ -21,12 +21,12 @@ class Game extends React.Component {
             }
         });
 
-        coToRender = [];
+        const playersToRender = [];
         this.props.players.forEach((player, id) => {
             playersToRender.push(<Player key={id} player={player} />);
         });
 
-        coToRender = divisions.map((division, id) => {
+        const divisionsToRender = divisions.map((division, id) => {
             const div = {
                 name: division.name,
                 from: planets.find(planet => planet.name === division.from),

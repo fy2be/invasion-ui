@@ -6,6 +6,8 @@ import * as net from 'net';
 var telnet = net.Socket();
 var socketio;
 var timer;
+var buffer = '';
+var isCatching = false;
 
 var status = {
     client: false,
@@ -18,6 +20,8 @@ net.Socket.prototype.send = function (data) {
 }
 
 function toClient(event, data) {
+    const short = data.length > 100 ? data.substr(0, 100) + '...' : data;
+    console.log(`${event}: ${short}`);
     status.client ? socketio.emit(event, data) :
         console.error('Missing connection to the client. (SOCKET.IO)');
 }
@@ -35,7 +39,7 @@ io.on('connection', function (socket) {
     if (!status.client) {
         telnet.connect(4444, 'liza.umcs.lublin.pl', function () {
             console.log('* Connecting to the server...');
-        });
+        }).setNoDelay();
 
         timer = setInterval(() => { telnet.send('CONFIRM_ACTIVITY'); }, 30000);
         status.client = true;
@@ -53,13 +57,45 @@ http.listen(3333, function () {
 
 // TELNET_EVENTS
 telnet.on('data', function (data) {
-    data = data.toString().substr(0, data.length - 2);
+    data = data.toString();
 
-    const event = data.split(/ (.+)/)[0]
-    data = data.split(/ (.+)/)[1]
+    const items = data.split(/ (.+)/);
+    const event = items[0].trim();
 
-    console.log(event + ' -> ' + data);
-    toClient(event, data);
+    if (items.length == 1) {
+        toClient(event, '');
+        return;
+    }
+
+    let msg = items[1].trim();
+
+    if (event === 'DISTANCE_MATRIX') {
+        isCatching = true;
+    }
+
+    if (event === 'PLANETS' && buffer.length > 0) {
+        console.log(`Buffer: ${buffer.length}`);
+        isCatching = false;
+
+        if (buffer.indexOf('PLANETS') > -1) {
+            const matrixDistanceData = buffer.substr(0, buffer.indexOf('PLANETS')).trim();
+            const planetsData = buffer.substr(buffer.indexOf('PLANETS') + 'PLANETS'.length, buffer.indexOf('DIVISIONS') - buffer.indexOf('PLANETS')).trim();
+
+            console.log(`Sending DISTANCE_MATRIX with PLANETS`);
+            toClient('DISTANCE_MATRIX', matrixDistanceData);
+            toClient('PLANETS', planetsData)
+        } else {
+            console.log('Sending only DISTANCE_MATRIX...');
+            toClient('DISTANCE_MATRIX', buffer);
+        }
+        buffer = '';
+    }
+
+    if (isCatching) {
+        buffer = buffer.length === 0 ? msg : buffer + data;
+    } else {
+        toClient(event, msg);
+    }
 });
 
 telnet.on('connect', function () {
@@ -99,6 +135,14 @@ function prepareEvents() {
 
     socketio.on('leave_channel', function () {
         telnet.send('LEAVE_CHANNEL');
+    });
+
+    socketio.on('change_production', function (change) {
+        telnet.send(`START_PRODUCTION ${change}`);
+    });
+
+    socketio.on('send_division', function (data) {
+        telnet.send(`SEND_DIVISION ${data}`);
     });
 
     socketio.on('disconnect', function () {

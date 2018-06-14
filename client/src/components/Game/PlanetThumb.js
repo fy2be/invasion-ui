@@ -31,13 +31,23 @@ const PlanetThumb = props => {
     }
 
     const showDistance = () => {
-        if (distance)
-            return ` (${distance})`;
+        if (distance) {
+            this.style = 'fas fa-road'
+            if (distance <= 5) {
+                this.style += ' active';
+            }
+            else if (distance > 7) {
+                this.style += ' red';
+            }
+        }
+        return (
+            <span>{distance} <i className={this.style} ></i></span>
+        );
     };
 
     return (
         <div {...planetThumbProperties}>
-            <div className='name'>{props.planet.name}{showDistance()}</div>
+            <div className='name'>{props.planet.name} - {showDistance()}</div>
             <div className='eq'>
                 <span className='turn'>{props.planet.turn}</span>
                 <span className='between'>/</span>

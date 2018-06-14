@@ -63,7 +63,16 @@ class Game extends React.Component {
             .filter(planet => planet.owner !== '-')
             .forEach((planet, id) => {
                 const owner = this.players.find(player => player.name === planet.owner);
-                owner.planets.push(<PlanetThumb key={id} planet={planet} handleChangeProduction={this.props.handleChangeProduction} handlePickPlanet={this.props.handlePickPlanet} enablePick login={this.props.login} />);
+                owner.planets.push(
+                <PlanetThumb
+                    key={id}
+                    planet={planet}
+                    handleChangeProduction={this.props.handleChangeProduction}
+                    handlePickPlanet={this.props.handlePickPlanet}
+                    enablePick
+                    login={this.props.login}
+                />
+                );
             });
 
         this.props.updatePlayers(this.players, () => {

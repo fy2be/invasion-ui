@@ -195,6 +195,10 @@ i.active {
     color: green;
 }
 
+i.red {
+    color: red;
+}
+
 .production i:hover {
     color: pink;
 }

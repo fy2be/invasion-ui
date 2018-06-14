@@ -55,7 +55,7 @@ const PlanetThumb = props => {
             </div>
             <div className='ships-tanks'>
                 <span className='ships'>{props.planet.ships}</span>
-                <span className='between'>/</span>
+                <span className='between'>({props.planet.ships + 2 * props.planet.tanks})</span>
                 <span className='tanks'>{props.planet.tanks}</span>
             </div>
             <div className='production'>

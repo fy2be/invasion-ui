@@ -75,12 +75,10 @@ class App extends React.Component {
   }
 
   handleConnect = () => {
-    console.log('haldeConnect');
     this.setState({ status: 'connected' });
   }
 
   handleLoginOk = () => {
-    console.log('handleLoginOk');
     this.setState({ status: 'logged' });
     this.socket.emit('list_channels');
 
@@ -92,7 +90,6 @@ class App extends React.Component {
   }
 
   handleListChannelsOk = data => {
-    console.log('handleListChannelsOk');
     const channels = data.split(' ').splice(1);
     this.setState({ channels });
   }

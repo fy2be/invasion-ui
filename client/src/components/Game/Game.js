@@ -3,6 +3,7 @@ import Player from './Player';
 import PlanetThumb from './PlanetThumb';
 import Division from './Division';
 import SendDivision from './SendDivision';
+import SortComponent from './SortComponent';
 
 class Game extends React.Component {
     planetsToRender = [];
@@ -34,22 +35,24 @@ class Game extends React.Component {
 
     updatePlanets() {
         this.planetsToRender = [];
-        this.planets.forEach((planet, id) => {
-            if (planet.owner === '-') {
-                this.planetsToRender.push(
-                    <PlanetThumb
-                        key={id}
-                        planet={planet}
-                        login={this.props.login}
-                        handlePickPlanet={this.props.handlePickPlanet}
-                        enablePick
-                        selected={this.props.selected}
-                        distanceMatrix={this.props.distanceMatrix}
-                        showDistance
-                    />
-                );
-            }
-        });
+        this.planets
+            .sort(this.props.sortMethod)
+            .forEach((planet, id) => {
+                if (planet.owner === '-') {
+                    this.planetsToRender.push(
+                        <PlanetThumb
+                            key={id}
+                            planet={planet}
+                            login={this.props.login}
+                            handlePickPlanet={this.props.handlePickPlanet}
+                            enablePick
+                            selected={this.props.selected}
+                            distanceMatrix={this.props.distanceMatrix}
+                            showDistance
+                        />
+                    );
+                }
+            });
 
         this.props.checkAsUpdated('planets');
     }
@@ -64,14 +67,14 @@ class Game extends React.Component {
             .forEach((planet, id) => {
                 const owner = this.players.find(player => player.name === planet.owner);
                 owner.planets.push(
-                <PlanetThumb
-                    key={id}
-                    planet={planet}
-                    handleChangeProduction={this.props.handleChangeProduction}
-                    handlePickPlanet={this.props.handlePickPlanet}
-                    enablePick
-                    login={this.props.login}
-                />
+                    <PlanetThumb
+                        key={id}
+                        planet={planet}
+                        handleChangeProduction={this.props.handleChangeProduction}
+                        handlePickPlanet={this.props.handlePickPlanet}
+                        enablePick
+                        login={this.props.login}
+                    />
                 );
             });
 
@@ -117,6 +120,7 @@ class Game extends React.Component {
 
                 <div className='mid'>
                     <div className='left'>
+                        <SortComponent handleChangeSortMethod={this.props.handleChangeSortMethod} />
                         {this.planetsToRender}
                     </div>
 

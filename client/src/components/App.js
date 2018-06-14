@@ -27,6 +27,7 @@ class App extends React.Component {
         ships: 0,
       },
 
+      sortMethod: (a, b) => a.efficiency - b.efficiency,
       distanceMatrix: ''
     };
 
@@ -186,6 +187,7 @@ class App extends React.Component {
 
         const update = { ...this.state.update };
         update.divisions = true;
+
         this.setState({ update });
       }
     }
@@ -193,8 +195,6 @@ class App extends React.Component {
   }
 
   handlePickPlanet = planet => {
-    console.log(`Picked: ${planet.name}`);
-
     const selected = Object.assign({}, this.state.selected);
 
     if (planet.owner === this.state.login) {
@@ -229,6 +229,24 @@ class App extends React.Component {
     });
   }
 
+  handleChangeSortMethod = sortMethod => {
+    if (sortMethod === 'efficiency')
+      this.f = (a, b) => a.efficiency - b.efficiency;
+    else if (sortMethod === 'army') {
+      this.f = (a, b) => {
+        const armyA = a.ships + 2 * a.tanks;
+        const armyB = b.ships + 2 * b.tanks;
+
+        return armyA - armyB;
+      };
+    }
+    console.log('Change sort method to: ' + this.f);
+
+    const update = { ...this.state.update };
+    update.planets = true;
+    this.setState({ sortMethod: this.f, update });
+  }
+
   render() {
     return (
       <div>
@@ -250,6 +268,8 @@ class App extends React.Component {
             selected={this.state.selected}
             setShips={this.setShips}
             distanceMatrix={this.state.distanceMatrix}
+            sortMethod={this.state.sortMethod}
+            handleChangeSortMethod={this.handleChangeSortMethod}
           /> : null}
       </div>
     );

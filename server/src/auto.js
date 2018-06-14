@@ -19,7 +19,7 @@ telnet.connect(4444, 'liza.umcs.lublin.pl', function () {
 
 const confirmActivity = setInterval(() => {
     telnet.send('CONFIRM_ACTIVITY');
-}, 3000);
+}, 30000);
 
 telnet.on('data', function (data) {
     data = data.toString();

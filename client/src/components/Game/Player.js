@@ -1,5 +1,4 @@
 import React from 'react';
-import Planet from './Planet';
 
 class Player extends React.Component {
     render() {

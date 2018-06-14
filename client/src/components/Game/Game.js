@@ -2,60 +2,122 @@ import React from 'react';
 import Player from './Player';
 import PlanetThumb from './PlanetThumb';
 import Division from './Division';
+import SendDivision from './SendDivision';
 
 class Game extends React.Component {
-    render() {
+    planetsToRender = [];
+    playersToRender = [];
+    divisionsToRender = [];
 
-        const players = this.props.players;
-        const divisions = this.props.divisions;
-        const planets = this.props.planets;
+    planets = [];
+    players = [];
+    divisions = [];
 
-        const planetsToRender = [];
+    componentDidUpdate() {
+        if (!this.props.players || !this.props.divisions || !this.props.planets)
+            return;
 
-        planets.forEach((planet, id) => {
+        this.planets = [...this.props.planets];
+        this.players = [...this.props.players];
+        this.divisions = [...this.props.divisions];
+
+        if (this.props.update.planets)
+            this.updatePlanets();
+
+        if (this.props.update.players)
+            this.updatePlayers();
+
+        if (this.props.update.divisions)
+            this.updateDivisions();
+
+    }
+
+    updatePlanets() {
+        this.planetsToRender = [];
+        this.planets.forEach((planet, id) => {
             if (planet.owner === '-') {
-                planetsToRender.push(<PlanetThumb key={id} planet={planet} />);
-            } else {
-                const owner = players.find(player => player.name === planet.owner);
-                owner.planets.push(<PlanetThumb key={id} planet={planet} />);
+                this.planetsToRender.push(
+                    <PlanetThumb
+                        key={id}
+                        planet={planet}
+                        login={this.props.login}
+                        handlePickPlanet={this.props.handlePickPlanet}
+                        enablePick
+                        selected={this.props.selected}
+                        distanceMatrix={this.props.distanceMatrix}
+                        showDistance
+                    />
+                );
             }
         });
 
-        const playersToRender = [];
-        this.props.players.forEach((player, id) => {
-            playersToRender.push(<Player key={id} player={player} />);
+        this.props.checkAsUpdated('planets');
+    }
+
+    updatePlayers() {
+        this.players.forEach(player => {
+            player.planets = [];
         });
 
-        const divisionsToRender = divisions.map((division, id) => {
+        this.planets
+            .filter(planet => planet.owner !== '-')
+            .forEach((planet, id) => {
+                const owner = this.players.find(player => player.name === planet.owner);
+                owner.planets.push(<PlanetThumb key={id} planet={planet} handleChangeProduction={this.props.handleChangeProduction} handlePickPlanet={this.props.handlePickPlanet} enablePick login={this.props.login} />);
+            });
+
+        this.props.updatePlayers(this.players, () => {
+            this.playersToRender = [];
+            const me = this.players.find(player => player.name === this.props.login);
+            this.playersToRender.push(<Player key="me" player={me} />);
+
+            this.players
+                .filter(player => player !== me)
+                .forEach((player, id) => {
+                    this.playersToRender.push(<Player key={id} player={player} />);
+                });
+        })
+
+        this.props.checkAsUpdated('players');
+    }
+
+    updateDivisions() {
+        this.divisionsToRender = this.divisions.map((division, id) => {
             const div = {
                 name: division.name,
-                from: planets.find(planet => planet.name === division.from),
-                to: planets.find(planet => planet.name === division.to),
-                ships: division.ships
+                from: this.planets.find(planet => planet.name === division.from),
+                to: this.planets.find(planet => planet.name === division.to),
+                ships: division.ships,
+                timeleft: division.timeleft
             };
 
-            console.log('from: ' + div.from.name);
-
-            return <Division division={div} />
+            return <Division key={id} division={div} />
         });
 
-        console.log(divisionsToRender);
+        this.props.checkAsUpdated('divisions');
+    }
 
+    render() {
         return (
             <div>
                 <h3>Game.Component</h3>
 
                 <div className="players-box">
-                    {playersToRender}
+                    {this.playersToRender}
                 </div>
 
                 <div className='mid'>
                     <div className='left'>
-                        {planetsToRender}
+                        {this.planetsToRender}
                     </div>
 
                     <div className='right'>
-                        {divisionsToRender}
+                        <SendDivision
+                            selected={this.props.selected}
+                            setShips={this.props.setShips}
+                            distanceMatrix={this.props.distanceMatrix}
+                        />
+                        {this.divisionsToRender}
                     </div>
                 </div>
             </div>

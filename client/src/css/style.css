@@ -170,12 +170,16 @@
 }
 
 .division-mid .top {
-    font-size: 32px;
+    font-size: 26px;
     text-align: center;
 }
 
+.division-mid .top > * {
+    padding: 0 5px;
+}
+
 .division-mid .bottom {
-    font-size: 32px;
+    font-size: 26px;
     text-align: center;
 }
 
@@ -189,4 +193,8 @@
 
 i.active {
     color: green;
+}
+
+.production i:hover {
+    color: pink;
 }

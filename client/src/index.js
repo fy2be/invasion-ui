@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
-// import './css/style.css';
-
-import Login from './screens/Login/login'
+import './css/style.css';
 
 import { Provider } from 'react-redux';
 import store from './store';

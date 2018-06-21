@@ -1,33 +1,32 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // import * as actionCreators from '../actions'
-import { ioLogin } from '../actions/io';
-import { setStatusServer, setStatusSocketIO } from '../actions/status';
+import { ioLogin, ioListChannels, ioJoinChannel, ioLeaveChannel } from '../actions/io';
+import { pickPlanet } from '../actions/game';
 
-import Game from '../components/Game/Game';
+import SwitchScreen from '../components/SwitchScreen/SwitchScreen';
 
 const mapStateToProps = state => {
-    console.log('--- mapStateToProps');
-    console.log(state);
-    console.log('--- end');
     return ({
         login: state.login,
         status: state.status,
-        screen: state.screen
+        screen: state.screen,
+        channels: state.channels,
+        game: state.game,
     })
 };
 
 const mapDispatchToProps = dispatch => {
-    console.log('--- mapDispatchToProps');
-    console.log(dispatch);
-    console.log('--- end');
     return {
         actions: bindActionCreators({
-            ioLogin, setStatusServer, setStatusSocketIO
-        }, dispatch)
+            ioLogin, ioListChannels, ioJoinChannel, ioLeaveChannel
+        }, dispatch),
+        game: {
+            actions: bindActionCreators({ pickPlanet }, dispatch)
+        }
     }
 };
 
-const App = connect(mapStateToProps, mapDispatchToProps)(Game);
+const App = connect(mapStateToProps, mapDispatchToProps)(SwitchScreen);
 
 export default App;

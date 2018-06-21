@@ -21,7 +21,11 @@ net.Socket.prototype.send = function (data) {
 
 function toClient(event, data) {
     const short = data.length > 100 ? data.substr(0, 100) + '...' : data;
-    console.log(`${event}: ${short}`);
+
+    if (data.type === 'IO_GAME_CONFIRM_ACTIVITY_OK') return;
+
+    // console.log(`${event}: ${short}`);
+    console.log(`% ${event} - ${data.type}`);
     status.client ? socketio.emit(event, data) :
         console.error('Missing connection to the client. (SOCKET.IO)');
 }
@@ -34,7 +38,6 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
     socketio = socket;
     prepareEvents();
-    console.log('a user connected');
 
     if (!status.client) {
         telnet.connect(4444, 'liza.umcs.lublin.pl', function () {
@@ -63,7 +66,10 @@ telnet.on('data', function (data) {
     const event = items[0].trim();
 
     if (items.length == 1) {
-        toClient(event, '');
+        // toClient(event, '');
+        toClient('action', {
+            type: `IO_GAME_${event}`
+        });
         return;
     }
 
@@ -82,11 +88,23 @@ telnet.on('data', function (data) {
             const planetsData = buffer.substr(buffer.indexOf('PLANETS') + 'PLANETS'.length, buffer.indexOf('DIVISIONS') - buffer.indexOf('PLANETS')).trim();
 
             console.log(`Sending DISTANCE_MATRIX with PLANETS`);
-            toClient('DISTANCE_MATRIX', matrixDistanceData);
-            toClient('PLANETS', planetsData)
+            // toClient('DISTANCE_MATRIX', matrixDistanceData);
+            toClient('action', {
+                type: 'IO_GAME_DISTANCE_MATRIX',
+                data: matrixDistanceData
+            });
+            // toClient('PLANETS', planetsData)
+            toClient('action', {
+                type: 'IO_GAME_PLANETS',
+                data: planetsData
+            });
         } else {
             console.log('Sending only DISTANCE_MATRIX...');
-            toClient('DISTANCE_MATRIX', buffer);
+            // toClient('DISTANCE_MATRIX', buffer);
+            toClient('action', {
+                type: 'IO_GAME_DISTANCE_MATRIX',
+                data: buffer
+            });
         }
         buffer = '';
     }
@@ -94,14 +112,21 @@ telnet.on('data', function (data) {
     if (isCatching) {
         buffer = buffer.length === 0 ? msg : buffer + data;
     } else {
-        toClient(event, msg);
+        // toClient(event, msg);
+        toClient('action', {
+            type: `IO_GAME_${event}`,
+            data: msg
+        });
     }
 });
 
 telnet.on('connect', function () {
     console.log('* Connected!');
     status.server = true;
-    toClient('TELNET_CONNECT', 'connected');
+    toClient('action', {
+        type: 'IO_SERVER_STATUS',
+        status: 'connected'
+    });
 });
 
 telnet.on('error', function (err) {
@@ -120,6 +145,40 @@ telnet.on('end', function (e) {
 
 function prepareEvents() {
     // SOCKET-IO EVENTS
+    socketio.on('action', action => {
+        switch (action.type) {
+            case 'IO_HELLO':
+                console.log('Helllloooouuuuuuu....');
+                break;
+
+            case 'IO_LOGIN':
+                console.log(`@login as: ${action.login}`);
+                telnet.send(`LOGIN ${action.login}`);
+                break;
+
+            case 'IO_LIST_CHANNELS':
+                console.log('@list_channels');
+                telnet.send('LIST_CHANNELS');
+                break;
+
+            case 'IO_JOIN_CHANNEL':
+                console.log(`@join_channel ${action.channel}`);
+                telnet.send(`JOIN_CHANNEL ${action.channel}`)
+                break;
+
+            case 'IO_LEAVE_CHANNEL':
+                console.log('@leave_channel');
+                telnet.send('LEAVE_CHANNEL');
+                break;
+
+            default:
+                console.log('Wpadlo...' + action.type);
+                console.dir(action);
+        }
+
+    })
+
+
     socketio.on('login', function (login) {
         console.log('login as: ' + login);
         telnet.send(`LOGIN ${login}`);

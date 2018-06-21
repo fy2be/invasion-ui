@@ -1,32 +1,19 @@
-import {
-    SET_SCREEN_TO_LOGIN, SET_SCREEN_TO_CHANLIST, SET_SCREEN_TO_CHANNEL, SET_SCREEN_TO_GAME
-} from '../actions/screen';
+export const IO_GAME_LOGIN_OK = 'IO_GAME_LOGIN_OK';
+export const IO_GAME_JOIN_CHANNEL_OK = 'IO_GAME_JOIN_CHANNEL_OK';
+export const IO_GAME_GAME_MODE = 'IO_GAME_GAME_MODE';
+export const IO_GAME_LEAVE_CHANNEL_OK = 'IO_GAME_LEAVE_CHANNEL_OK';
 
 const screen = (state = 'login', action) => {
     switch (action.type) {
-        case SET_SCREEN_TO_LOGIN:
-            return {
-                ...state,
-                screen: 'login'
-            };
+        case IO_GAME_LOGIN_OK:
+        case IO_GAME_LEAVE_CHANNEL_OK:
+            return 'chanlist';
 
-        case SET_SCREEN_TO_CHANLIST:
-            return {
-                ...state,
-                screen: 'chanlist'
-            };
+        case IO_GAME_JOIN_CHANNEL_OK:
+            return 'channel';
 
-        case SET_SCREEN_TO_CHANNEL:
-            return {
-                ...state,
-                screen: 'channel'
-            };
-
-        case SET_SCREEN_TO_GAME:
-            return {
-                ...state,
-                screen: 'game'
-            };
+        case IO_GAME_GAME_MODE:
+            return 'game';
 
         default:
             return state;

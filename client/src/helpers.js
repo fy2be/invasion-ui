@@ -44,6 +44,9 @@ function splitDivisions(stringWithDivisions) {
     // input:
     // '2 test XXXX YYYY 10 test2 AAA ZZZ 20';
 
+    if (stringWithDivisions === '0')
+        return [];
+
     const regex = /[a-zA-Z0-9]+ [A-Z0-9]{4,} [A-Z0-9]{4,} \d+ \d+/g;
 
     const divisions = [];
